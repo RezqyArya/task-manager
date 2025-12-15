@@ -1,5 +1,6 @@
 // server.js (FILE SERVER STARTUP)
 
+require('dotenv').config();
 const app = require('./src/app');
 const { PrismaClient } = require('@prisma/client');
 
