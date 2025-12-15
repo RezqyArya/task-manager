@@ -26,8 +26,11 @@ Aplikasi manajemen **Project dan Task berbasis tim** yang dibangun sebagai **RES
 ---
 
 ### Production URL
-http://54.88.142.129:3000
-https://ec2-54-88-142-129.compute-1.amazonaws.com/
+
+- http://54.88.142.129:3000
+- https://ec2-54-88-142-129.compute-1.amazonaws.com/
+
+```
 
 ## Cara Menjalankan Aplikasi (Lokal)
 
