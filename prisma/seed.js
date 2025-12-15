@@ -117,7 +117,7 @@ async function main() {
     }
     
     console.log(`✅ ${membersData.length} Relasi Project Member berhasil dibuat.`);
-
+}
 main()
     .catch((e) => {
         console.error('❌ Terjadi kesalahan saat seeding:', e);
@@ -126,4 +126,3 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
-}
