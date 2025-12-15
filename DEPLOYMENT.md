@@ -16,8 +16,6 @@ https://github.com/RezqyArya/task-manager
 - http://54.88.142.129:3000
 - https://ec2-54-88-142-129.compute-1.amazonaws.com/
 
-```
-
 ### Detail AWS EC2:
 ```
 Public IP: 54.88.142.129

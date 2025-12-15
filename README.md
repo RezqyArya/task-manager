@@ -30,8 +30,6 @@ Aplikasi manajemen **Project dan Task berbasis tim** yang dibangun sebagai **RES
 - http://54.88.142.129:3000
 - https://ec2-54-88-142-129.compute-1.amazonaws.com/
 
-```
-
 ## Cara Menjalankan Aplikasi (Lokal)
 
 ### Prasyarat
@@ -40,8 +38,8 @@ Aplikasi manajemen **Project dan Task berbasis tim** yang dibangun sebagai **RES
 
 ### Instalasi
 ```
-git clone <URL_REPO_ANDA>
-cd <nama_folder_proyek>
+git clone https://github.com/RezqyArya/task-manager
+cd task-manager
 npm install
 
 ```
