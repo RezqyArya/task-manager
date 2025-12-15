@@ -27,7 +27,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   : '*'; 
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: allowedOrigins, credentials: true
 }));
 
 // --- MIDDLEWARES (Global) ---
