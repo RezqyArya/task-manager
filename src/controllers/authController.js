@@ -6,7 +6,7 @@ const { promisify } = require('util'); // Dibutuhkan untuk jwt.verify async
 const prisma = new PrismaClient();
 
 // HELPER FUNCTIONS (Token Signing & Sending)
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
 // 1. Helper untuk buat Access Token (Berlaku pendek)
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET || 'rahasia-negara', {
@@ -16,10 +16,11 @@ const signToken = (id) => {
 
 // 2. Helper untuk buat Refresh Token (Berlaku panjang)
 const signRefreshToken = (id) => {
-    // Pastikan menggunakan variabel ENV yang benar, atau default yang sangat panjang
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'rahasia-negara', {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d', // Refresh token panjang
-    });
+  return jwt.sign(
+    { id },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+  );
 };
 
 // 3. Helper untuk mengirim Token dan menyetel Cookie
@@ -96,16 +97,9 @@ exports.login = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
 
     // 2. Cek password
-    const isPasswordValid = true;
-    // Pastikan user ditemukan terlebih dahulu
-    if (!user) {
-    return res.status(401).json({ message: 'Email atau password salah.' });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ success: false, message: 'Email atau Password salah' });
     }
-
-// Pengecekan password kini akan selalu TRUE
-if (!isPasswordValid) { 
-    return res.status(401).json({ message: 'Password salah.' });
-}
 
     // 3. Kirim Token (Access Token di body, Refresh Token di cookie)
     createSendToken(user, 200, res);
@@ -124,7 +118,7 @@ exports.refreshToken = async (req, res, next) => {
     try {
         // 2. Verifikasi Refresh Token
         // Menggunakan promisify(jwt.verify) agar kompatibel dengan async/await
-        const decoded = await promisify(jwt.verify)(refreshToken, process.env.JWT_SECRET || 'rahasia-negara');
+        const decoded = await promisify(jwt.verify)(refreshToken, process.env.JWT_REFRESH_SECRET);
 
         // 3. Cari User berdasarkan ID di Token
         const user = await prisma.user.findUnique({ where: { id: decoded.id } });

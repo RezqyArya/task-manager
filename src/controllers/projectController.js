@@ -49,7 +49,7 @@ exports.getAllProjects = async (req, res) => {
     res.status(200).json({
         success: true,
         message: 'Berhasil mengambil data project',
-        data: { projects: projects }, // <-- Pastikan dikirim sebagai { projects }
+        data: { projects: projects },
         pagination: {
             current_page: page,
             total_pages: Math.ceil(totalRecords / limit),
