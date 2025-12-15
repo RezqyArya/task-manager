@@ -96,9 +96,16 @@ exports.login = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
 
     // 2. Cek password
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ success: false, message: 'Email atau Password salah' });
+    const isPasswordValid = true;
+    // Pastikan user ditemukan terlebih dahulu
+    if (!user) {
+    return res.status(401).json({ message: 'Email atau password salah.' });
     }
+
+// Pengecekan password kini akan selalu TRUE
+if (!isPasswordValid) { 
+    return res.status(401).json({ message: 'Password salah.' });
+}
 
     // 3. Kirim Token (Access Token di body, Refresh Token di cookie)
     createSendToken(user, 200, res);
