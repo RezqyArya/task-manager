@@ -1,50 +1,69 @@
-Task Manager API & Web Client
+# Task Manager API & Web Client
 
-Aplikasi manajemen proyek dan task berbasis tim dengan otorisasi Role-Based Access Control (RBAC) dan Validasi Kepemilikan (Ownership). Dibangun dengan Node.js, Express, dan Prisma.
+Aplikasi manajemen **Project dan Task berbasis tim** yang dibangun sebagai **REST API siap produksi**. Sistem ini menerapkan **Role-Based Access Control (RBAC)** dan **validasi kepemilikan data (ownership)** untuk memastikan keamanan serta pembatasan akses antar pengguna.
 
-Tech Stack & Fitur Utama
+---
 
-* **Backend:** Node.js, Express.js
-* **Database:** PostgreSQL (via Prisma ORM)
-* **Authentication & Security:** JWT (Access Token & Refresh Token), Bcrypt Hashing (salt rounds 12), Rate Limiting.
-* **Validasi:** Zod (Schema Validation Middleware).
-* **Otorisasi:** Role-Based Access Control (RBAC) - ADMIN dan USER. Serta Validasi Kepemilikan (Owner Bypass).
-* **Deployment:** PM2 (Process Manager) di AWS EC2.
+## Teknologi yang Digunakan
+- **Backend:** Node.js v18+, Express.js
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication:** JWT (Access Token & Refresh Token)
+- **Security:** Bcrypt Hashing (salt rounds 12), Rate Limiting
+- **Validation:** Zod
+- **Authorization:** RBAC (ADMIN, USER) & Ownership Validation
+- **Deployment:** PM2 (AWS EC2)
 
-Persiapan Lokal (Local Setup)
+---
 
-#1. Prasyarat
-Pastikan Anda sudah menginstal:
-Node.js (v18+)
-PostgreSQL Server (Lokal atau menggunakan Docker)
+## Fitur Utama
+1. Autentikasi dan otorisasi berbasis JWT.
+2. Role **ADMIN** dan **USER** dengan hak akses berbeda.
+3. CRUD Project dan Task berbasis tim.
+4. Validasi kepemilikan data untuk mencegah akses tidak sah.
+5. REST API siap produksi dan dapat di-deploy ke cloud server.
 
-#2. Instalasi
+---
 
-Clone repository
+## Cara Menjalankan Aplikasi (Lokal)
+
+### Prasyarat
+- Node.js v18+
+- PostgreSQL
+
+### Instalasi
+```
 git clone <URL_REPO_ANDA>
 cd <nama_folder_proyek>
-
-Install dependencies
 npm install
 
-#3. Konfigurasi Database
-Buat file .env (berdasarkan .env.example) dan atur DATABASE_URL Anda ke server PostgreSQL lokal.
+```
 
-#4. Setup Database Schema & Data Awal
-Jalankan migrasi dan seeder untuk membuat tabel dan mengisi data Admin/User:
-#Generate Prisma Client & Run Migrations
+### Konfigurasi & Database
+```
+cp .env.example .env
 npx prisma migrate dev --name init
-#Run Seeder (Membuat Admin: admin@gmail.com dan 4 User Regular)
 npx prisma db seed
 
-#5. Menjalankan Aplikasi
-npx nodemon server.js #Start server dengan nodemon
-Aplikasi akan berjalan di http://localhost:3000
+```
 
-#Akun Demo
+### Menjalankan Server (Lokal)
+```
+npx nodemon server.js
 
-Password default: 123456
+```
+
+### Aplikasi berjalan pada:
+```
+http://localhost:3000
+
+```
+
+### Akun Demo
+``` bash
+Password default: password123
 
 Role,    Email,            Deskripsi
 ADMIN,   admin@gmail.com,   "CRUD semua Project & Task"
 USER,    user@gmail.com,    "Akses project tempat diundang"
+```
