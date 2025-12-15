@@ -6,7 +6,7 @@ const { promisify } = require('util'); // Dibutuhkan untuk jwt.verify async
 const prisma = new PrismaClient();
 
 // HELPER FUNCTIONS (Token Signing & Sending)
-
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 // 1. Helper untuk buat Access Token (Berlaku pendek)
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET || 'rahasia-negara', {

@@ -1,48 +1,66 @@
+// app.js (FILE KONFIGURASI APLIKASI)
+
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // <--- WAJIB ADA
+const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 
-// Import Routes
+// --- Perhatikan path import, disesuaikan dengan asumsi path relatif ke server.js ---
+// Anda harus memastikan path ini benar relatif terhadap posisi app.js
 const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
-// --- MIDDLEWARES ---
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined')); 
+} else {
+  app.use(morgan('dev')); 
+}
+
+// 2. CORS: Batasi Origin di Produksi untuk Keamanan
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['http://54.88.142.129'] 
+  : '*'; 
+
+app.use(cors({
+    origin: allowedOrigins,
+}));
+
+// --- MIDDLEWARES (Global) ---
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 
-if (process.env.NODE_ENV === 'development') {
-  
-}
-
 // ==================================================================
 // 1. PRIORITAS UTAMA: TAMPILKAN FRONTEND (HTML/CSS)
+// Ini yang mencegah "cannot GET /" jika public/index.html ada
 // ==================================================================
 app.use(express.static(path.join(__dirname, '../public')));
 
 // ==================================================================
 // 2. PRIORITAS KEDUA: API ROUTES (Data)
 // ==================================================================
+app.get('/api/health', (req, res) => { // Tambahkan Health Check di sini
+  res.status(200).json({ status: 'ok', message: 'API is running' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+
+// Task Routes: Pastikan taskRoutes menggunakan { mergeParams: true }
 app.use('/api/projects/:projectId/tasks', taskRoutes);
 app.use('/api/tasks', taskRoutes);
 
+
 // ==================================================================
-// 3. ERROR HANDLING
+// 3. ERROR HANDLING 404 (WAJIB)
 // ==================================================================
-// Jika rute tidak ditemukan di Frontend maupun API
 app.use((req, res, next) => {
-  // Cek apakah request meminta API (JSON) atau Halaman Web
   if (req.originalUrl.startsWith('/api')) {
     res.status(404).json({ success: false, message: `API Not Found - ${req.originalUrl}` });
   } else {
@@ -50,6 +68,7 @@ app.use((req, res, next) => {
   }
 });
 
+// GLOBAL ERROR HANDLER
 app.use((err, req, res, next) => {
   console.error('ERROR 💥', err);
   const statusCode = err.statusCode || 500;
@@ -59,4 +78,5 @@ app.use((err, req, res, next) => {
   });
 });
 
+// --- EXPORT APLIKASI ---
 module.exports = app;
